@@ -3,6 +3,8 @@ import logging
 import pathlib
 import argparse
 
+from .app import app
+
 def argument_parser():
     parser = argparse.ArgumentParser(description="An A/B test server")
 
@@ -39,3 +41,7 @@ def main(args=sys.argv[1:]):
     )
 
     logging.info('%s', options)
+
+    app.run(
+        port=options.port,
+    )
