@@ -9,7 +9,7 @@ def argument_parser():
     parser = argparse.ArgumentParser(description="An A/B test server")
 
     parser.add_argument(
-        'dir',
+        "dir",
         type=pathlib.Path,
         default=pathlib.Path.cwd(),
         nargs='?',
@@ -25,8 +25,22 @@ def argument_parser():
     )
 
     parser.add_argument(
-        '-v',
-        '--verbose',
+        "-b",
+        "--bind",
+        default="::",
+        help="host to which to bind",
+    )
+
+    parser.add_argument(
+        "-D",
+        "--debug",
+        action='store_true',
+        help="run in Flask debug mode",
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
         action='store_true',
         help="be particularly noisy",
     )
@@ -36,12 +50,16 @@ def argument_parser():
 def main(args=sys.argv[1:]):
     options = argument_parser().parse_args(args)
 
+    verbose_output = options.debug or options.verbose
+
     logging.basicConfig(
-        level=logging.DEBUG if options.verbose else logging.INFO,
+        level=logging.DEBUG if verbose_output else logging.INFO,
     )
 
     logging.info('%s', options)
 
     app.run(
+        host=options.bind,
         port=options.port,
+        debug=options.debug,
     )
