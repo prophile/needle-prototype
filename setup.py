@@ -26,4 +26,9 @@ setup(
         'pyyaml >=3.12, <4',
         'python-dateutil >=2.5',
     ),
+    entry_points={
+        'console_scripts': (
+            'needle = needle.cli:main',
+        ),
+    },
 )
