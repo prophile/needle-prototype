@@ -1,4 +1,5 @@
 import sys
+import logging
 import pathlib
 import argparse
 
@@ -31,4 +32,9 @@ def argument_parser():
 
 def main(args=sys.argv[1:]):
     options = argument_parser().parse_args(args)
-    print(options)
+
+    logging.basicConfig(
+        level=logging.DEBUG if options.verbose else logging.INFO,
+    )
+
+    logging.info('%s', options)
