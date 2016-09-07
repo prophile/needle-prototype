@@ -17,7 +17,7 @@ def send_static_file(path, mimetype='text/html'):
     response.add_etag()
     response.make_conditional(flask.request)
 
-    response.headers['Cache-Control'] = 'max-age: 30'
+    response.headers['Cache-Control'] = 'max-age: 600'
 
     return response
 
