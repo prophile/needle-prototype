@@ -5,6 +5,7 @@ import argparse
 
 from .app import app
 
+
 def argument_parser():
     parser = argparse.ArgumentParser(description="An A/B test server")
 
@@ -46,6 +47,7 @@ def argument_parser():
     )
 
     return parser
+
 
 def main(args=sys.argv[1:]):
     options = argument_parser().parse_args(args)
