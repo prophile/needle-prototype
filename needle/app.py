@@ -4,4 +4,4 @@ app = flask.Flask('needle')
 
 @app.route('/')
 def bees():
-    raise ValueError("wtf be this")
+    return "Hello, world!"
