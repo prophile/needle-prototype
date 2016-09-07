@@ -5,4 +5,4 @@ app = flask.Flask('needle')
 
 @app.route('/')
 def bees():
-    return "Hello, world!"
+    return str(app.config['ROOT'])

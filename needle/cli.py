@@ -58,7 +58,7 @@ def main(args=sys.argv[1:]):
         level=logging.DEBUG if verbose_output else logging.INFO,
     )
 
-    logging.info('%s', options)
+    app.config['ROOT'] = options.dir
 
     app.run(
         host=options.bind,
