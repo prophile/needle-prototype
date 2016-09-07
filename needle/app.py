@@ -23,5 +23,5 @@ def send_static_file(path, mimetype='text/html'):
 
 
 @app.route('/')
-def bees():
+def root():
     return send_static_file('static/index.html')
