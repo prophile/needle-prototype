@@ -10,6 +10,7 @@ def argument_parser():
         'dir',
         type=pathlib.Path,
         default=pathlib.Path.cwd(),
+        nargs='?',
         help="main directory, defining tests and metrics",
     )
 
