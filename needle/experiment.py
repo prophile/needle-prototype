@@ -110,7 +110,7 @@ class Experiment:
 
     @property
     def is_in_progress(self):
-        return self.start_date <= datetime.today() and not self.is_concluded
+        return self.start_date <= datetime.date.today() and not self.is_concluded
 
 
 class Branch:
