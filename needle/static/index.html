@@ -5,8 +5,10 @@
   </head>
   <body>
     <form id="lookup-user" method="GET" action="user">
-      <input name="user-id" type="text"></input>
-      <input name="user-signup-date" type="date"></input>
+      <label for="user-id">User ID</label>
+      <input id="user-id" name="user-id" type="text"></input>
+      <label for="user-signup-date">Signup date</label>
+      <input id="user-signup-date" name="user-signup-date" type="date"></input>
       <button type="submit">Lookup</button>
     </form>
   </body>
