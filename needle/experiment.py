@@ -17,6 +17,7 @@ class UserClass(enum.Enum):
     NEW = 'new'
     BOTH = 'both'
 
+
 class Experiment:
     __slots__ = (
         'name',
