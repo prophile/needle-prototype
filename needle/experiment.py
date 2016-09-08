@@ -176,8 +176,14 @@ def user_valid_for_experiment(signup_date, experiment):
 def user_experiment(user_id, signup_date, site_area, experiments):
     user_split = split_by_site_area(site_area, experiments)
 
+    hash_base = ('%s/%s' % (
+        site_area,
+        user_id,
+    )).encode('utf-8')
+
     user_hash = int.from_bytes(
-        hashlib.md5(str(user_id).encode('utf-8')).digest(),
+        hashlib.md5(hash_base).digest(),
+        byteorder='big',
     )
     precision = 1000000
 
