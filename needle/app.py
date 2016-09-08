@@ -1,4 +1,5 @@
 import flask
+import dateutil.parser
 import pkg_resources
 
 app = flask.Flask('needle')
@@ -25,13 +26,24 @@ def send_static_file(path, mimetype='text/html'):
     return response
 
 
-@app.route('/')
+@app.route('/', methods=('GET',))
 def root():
     return send_static_file('static/index.html')
 
 
-@app.route('/user')
+@app.route('/user', methods=('GET',))
 def lookup_user():
-    response = flask.jsonify({})
+    try:
+        user_id = int(flask.request.args['user-id'])
+        signup_date = dateutil.parser.parse(
+            flask.request.args['user-signup-date'],
+        )
+        site_area = flask.request.args['site-area']
+    except (ValueError, KeyError):
+        flask.abort(400)
+
+    response = flask.jsonify({
+        'user-id': user_id,
+    })
     mark_cached(response, time=60)
     return response
