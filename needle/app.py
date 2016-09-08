@@ -1,4 +1,6 @@
-import flask
+import json
+import aiohttp.web
+import logging
 import dateutil.parser
 import functools
 import pkg_resources
@@ -6,52 +8,45 @@ import pkg_resources
 from .experiment import user_experiments
 
 
-app = flask.Flask('needle')
+logger = logging.getLogger(__name__)
 
 
-@functools.lru_cache(maxsize=1)
-def get_configuration():
+def get_configuration(request):
     from .configuration import Configuration  # Lazy-load
-    return Configuration(app.config['ROOT'])
-
-
-def mark_cached(response, time=600):
-    response.add_etag()
-    response.make_conditional(flask.request)
-
-    response.headers['Cache-Control'] = 'max-age: %d' % time
+    return Configuration(request.app['root'])
 
 
 def send_static_file(path, mimetype='text/html'):
     file_data = pkg_resources.resource_string('needle', 'static/index.html')
 
-    response = flask.Response(
+    headers = {'Cache-Control': 'max-age: 600'}
+
+    return aiohttp.web.Response(
         status=200,
-        mimetype=mimetype,
+        content_type=mimetype,
+        body=file_data,
+        headers=headers,
     )
-    response.set_data(file_data)
-
-    mark_cached(response)
-
-    return response
 
 
-@app.route('/', methods=('GET',))
-def root():
+async def site_root(request):
     return send_static_file('static/index.html')
 
 
-@app.route('/user', methods=('GET',))
-def lookup_user():
+async def lookup_user(request):
     try:
-        user_id = int(flask.request.args['user-id'])
+        user_id = int(request.GET['user-id'])
         signup_date = dateutil.parser.parse(
-            flask.request.args['user-signup-date'],
+            request.GET['user-signup-date'],
         )
     except (ValueError, KeyError):
-        flask.abort(400)
+        return aiohttp.web.Response(
+            status=400,
+            content_type='text/plain',
+            text="Bad request",
+        )
 
-    config = get_configuration()
+    config = get_configuration(request)
 
     experiment_parameters = dict(config.defaults)
 
@@ -69,10 +64,36 @@ def lookup_user():
             'branch': branch.name,
         })
 
-    response = flask.jsonify({
+    response = {
         'user-id': user_id,
         'debug-experiments': debug_experiments,
         **experiment_parameters,
-    })
-    mark_cached(response, time=60)
-    return response
+    }
+
+    return aiohttp.web.Response(
+        status=200,
+        headers={'Cache-Control': 'max-age: 60'},
+        content_type='application/json',
+        body=json.dumps(response).encode('utf-8'),
+    )
+
+
+def get_app(root, *, debug=False):
+    app = aiohttp.web.Application(
+        logger=logger,
+        debug=debug,
+    )
+    app.router.add_route('GET', '/', site_root)
+    app.router.add_route('GET', '/user', lookup_user)
+    app['root'] = root
+    return app
+
+
+def run(root, *, host='::', port=2121, debug=False):
+    app = get_app(root, debug=debug)
+
+    aiohttp.web.run_app(
+        app,
+        host=host,
+        port=port,
+    )

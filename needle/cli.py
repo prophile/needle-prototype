@@ -3,7 +3,7 @@ import logging
 import pathlib
 import argparse
 
-from .app import app
+from .app import run
 
 
 def argument_parser():
@@ -58,9 +58,8 @@ def main(args=sys.argv[1:]):
         level=logging.DEBUG if verbose_output else logging.INFO,
     )
 
-    app.config['ROOT'] = options.dir
-
-    app.run(
+    run(
+        root=options.dir,
         host=options.bind,
         port=options.port,
         debug=options.debug,

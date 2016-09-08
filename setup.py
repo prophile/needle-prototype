@@ -20,7 +20,7 @@ setup(
     ),
     url='https://github.com/thread/needle',
     install_requires=(
-        'flask >=0.11',
+        'aiohttp >=0.22',
         'numpy >=1.11, <2',
         'scipy >=0.18',
         'pyyaml >=3.12, <4',
