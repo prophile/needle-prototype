@@ -48,7 +48,7 @@ def lookup_user():
         signup_date = dateutil.parser.parse(
             flask.request.args['user-signup-date'],
         )
-        site_area = flask.request.args['site-area']
+        site_area = 'home'
     except (ValueError, KeyError):
         flask.abort(400)
 
