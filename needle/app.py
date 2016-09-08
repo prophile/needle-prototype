@@ -3,7 +3,7 @@ import dateutil.parser
 import functools
 import pkg_resources
 
-from .experiment import user_experiment
+from .experiment import user_experiments
 
 
 app = flask.Flask('needle')
@@ -48,34 +48,30 @@ def lookup_user():
         signup_date = dateutil.parser.parse(
             flask.request.args['user-signup-date'],
         )
-        site_area = 'home'
     except (ValueError, KeyError):
         flask.abort(400)
 
     config = get_configuration()
 
-    experiment, branch = user_experiment(
+    experiment_parameters = dict(config.defaults)
+
+    debug_experiments = []
+
+    for experiment, branch in user_experiments(
         user_id=user_id,
         signup_date=signup_date,
-        site_area=site_area,
-        experiments=config.experiments,
-    )
-
-    if branch is not None:
-        experiment_parameters = {
-            'debug-experiment': experiment.name,
-            'debug-branch': branch.name,
-            **branch.parameters,
-        }
-    else:
-        experiment_parameters = {
-            'debug-experiment': None,
-            'debug-branch': None,
-        }
+        configuration=config,
+    ):
+        experiment_parameters.update(branch.parameters)
+        debug_experiments.append({
+            'site-area': experiment.site_area,
+            'experiment': experiment.name,
+            'branch': branch.name,
+        })
 
     response = flask.jsonify({
         'user-id': user_id,
-        **config.defaults,
+        'debug-experiments': debug_experiments,
         **experiment_parameters,
     })
     mark_cached(response, time=60)

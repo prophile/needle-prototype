@@ -173,33 +173,33 @@ def user_valid_for_experiment(signup_date, experiment):
     return True
 
 
-def user_experiment(user_id, signup_date, site_area, experiments):
-    user_split = split_by_site_area(site_area, experiments)
+def user_experiments(user_id, signup_date, configuration):
+    for site_area in configuration.site_areas:
+        user_split = split_by_site_area(
+            site_area,
+            configuration.experiments,
+        )
 
-    hash_base = ('%s/%s' % (
-        site_area,
-        user_id,
-    )).encode('utf-8')
+        hash_base = ('%s/%s' % (
+            site_area,
+            user_id,
+        )).encode('utf-8')
 
-    user_hash = int.from_bytes(
-        hashlib.md5(hash_base).digest(),
-        byteorder='big',
-    )
-    precision = 1000000
+        user_hash = int.from_bytes(
+            hashlib.md5(hash_base).digest(),
+            byteorder='big',
+        )
+        precision = 1000000
 
-    user_hash %= precision
+        user_hash %= precision
 
-    for fraction, experiment, branch in user_split:
-        threshold = int(fraction * precision)
+        for fraction, experiment, branch in user_split:
+            threshold = int(fraction * precision)
 
-        if user_hash <= threshold:
-            # User is in this group, verify validity
+            if user_hash <= threshold:
+                # User is in this group, verify validity
 
-            if user_valid_for_experiment(signup_date, experiment):
-                return experiment, branch
-            else:
-                # Was in this group, but isn't valid for experiment
-                return None, None
+                if user_valid_for_experiment(signup_date, experiment):
+                    yield experiment, branch
 
-    # Was not in an experiment
-    return None, None
+                break
