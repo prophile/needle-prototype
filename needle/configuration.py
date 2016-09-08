@@ -12,6 +12,7 @@ class Configuration:
         logger.info("Loading configuration from %s", self.path)
         logger.debug("Getting defaults")
         self.defaults = self._load_yaml('defaults.yaml')
+        self.site_areas = set()
 
         logger.debug("Loading experiments")
         self._load_experiments()
@@ -48,11 +49,13 @@ class Configuration:
                 )
                 raise ValueError("Superunity coverage in %s" % experiment_name)
 
+            site_area = experiment['site-area']
+
             self.experiments.append(Experiment(
                 name=experiment_name,
                 description=experiment.get('description', ""),
                 confidence=experiment.get('confidence', 0.95),
-                site_area=experiment['site-area'],
+                site_area=site_area,
                 user_class=UserClass(experiment.get('user-class', 'both')),
                 start_date=experiment['start-date'],
                 branches=branches,
@@ -61,6 +64,8 @@ class Configuration:
                 tail=Tail(experiment.get('tail', 'both')),
                 secondary_metrics=(),
             ))
+
+            self.site_areas.add(site_area)
 
     def _load_yaml(self, filename):
         path = self.path / filename
