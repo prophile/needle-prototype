@@ -5,11 +5,11 @@ experiments:
       - name: control
         fraction: 0.2
         parameters:
-          button_colour: red
+          button-colour: red
       - name: test
         fraction: 0.2
         parameters:
-          button_colour: green
+          button-colour: green
     site-area: home
     metric: conversion
     minimum-change: 0.01
