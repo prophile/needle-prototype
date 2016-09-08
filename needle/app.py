@@ -28,3 +28,10 @@ def send_static_file(path, mimetype='text/html'):
 @app.route('/')
 def root():
     return send_static_file('static/index.html')
+
+
+@app.route('/user')
+def lookup_user():
+    response = flask.jsonify({})
+    mark_cached(response, time=60)
+    return response
