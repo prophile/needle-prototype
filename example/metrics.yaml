@@ -1,0 +1,27 @@
+metrics:
+ conversion:
+   name: Conversion to first order
+   description: >
+     Fraction of users converting from finishing registration to making an
+     order
+   type: bernoulli
+   prior: [0.05, 1.0]
+   sql: >
+     SELECT
+       EXISTS (
+         SELECT * FROM orders_order WHERE user_id = picks_trialdata.user_id
+       )
+     FROM
+       picks_trialdata
+     WHERE
+       picks_trialdata.trial = 7 AND
+       picks_trialdata.user_id IN %(users)s
+
+connection: postgres:///styleme
+
+get-users: >
+  SELECT
+    id,
+    date_joined
+  FROM
+    auth_user
