@@ -157,6 +157,22 @@ def split_by_site_area(site_area, experiments):
     return splits
 
 
+def user_valid_for_experiment(signup_date, experiment):
+    if (
+        experiment.user_class == UserClass.EXISTING and
+        signup_date >= experiment.start_date
+    ):
+        return False
+
+    if (
+        experiment.user_class == UserClass.NEW and
+        signup_date < experiment.start_date
+    ):
+        return False
+
+    return True
+
+
 def user_experiment(user_id, signup_date, site_area, experiments):
     user_split = split_by_site_area(site_area, experiments)
 
