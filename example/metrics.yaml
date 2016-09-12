@@ -36,3 +36,5 @@ get-users: >
     date_joined
   FROM
     auth_user
+  WHERE
+    is_superuser

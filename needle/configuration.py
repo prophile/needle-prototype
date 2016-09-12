@@ -17,6 +17,9 @@ class Configuration:
         logger.debug("Loading experiments")
         self._load_experiments()
 
+        logger.debug("Loading metrics")
+        self._tmp_metric_config = self._load_yaml('metrics.yaml')
+
     def _load_experiments(self):
         source = self._load_yaml('experiments.yaml')
 
