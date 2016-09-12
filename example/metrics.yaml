@@ -1,21 +1,32 @@
 metrics:
  conversion:
-   name: Conversion to first order
+   name: Conversion to first order (14 day)
    description: >
      Fraction of users converting from finishing registration to making an
-     order
+     order within 14 days
    type: bernoulli
    prior: [0.05, 1.0]
    sql: >
      SELECT
        EXISTS (
-         SELECT * FROM orders_order WHERE user_id = picks_trialdata.user_id
+         SELECT
+           *
+         FROM
+           orders_order
+         WHERE
+           user_id = picks_trialdata.user_id AND
+           created < metrics_cohort.timestamp + interval '14 days'
        )
      FROM
        picks_trialdata
+       JOIN
+         metrics_cohort
+       ON
+         metrics_cohort.user_id = picks_trialdata.user_id
      WHERE
        picks_trialdata.trial = 7 AND
-       picks_trialdata.user_id IN %(users)s
+       picks_trialdata.user_id IN %(users)s AND
+       metrics_cohort.timestamp < now() - interval '14 days'
 
 connection: postgres:///styleme
 
