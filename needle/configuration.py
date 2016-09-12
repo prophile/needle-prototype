@@ -59,7 +59,7 @@ class Configuration:
                 user_class=UserClass(experiment.get('user-class', 'both')),
                 start_date=experiment['start-date'],
                 branches=branches,
-                primary_metric=None,
+                primary_metric=experiment['metric'],
                 minimum_change=experiment['minimum-change'],
                 tail=Tail(experiment.get('tail', 'both')),
                 secondary_metrics=(),
