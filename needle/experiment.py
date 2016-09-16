@@ -5,13 +5,6 @@ import datetime
 import textwrap
 
 @enum.unique
-class Tail(enum.Enum):
-    LESS = 'less'
-    GREATER = 'greater'
-    BOTH = 'both'
-
-
-@enum.unique
 class UserClass(enum.Enum):
     EXISTING = 'existing'
     NEW = 'new'
@@ -29,7 +22,6 @@ class Experiment:
         'branches',
         'primary_metric',
         'minimum_change',
-        'tail',
         'secondary_metrics',
         'results',
     )
@@ -46,7 +38,6 @@ class Experiment:
         branches,
         primary_metric,
         minimum_change,
-        tail=Tail.BOTH,
         secondary_metrics=()
     ):
         self.name = name
@@ -58,7 +49,6 @@ class Experiment:
         self.branches = branches
         self.primary_metric = primary_metric
         self.minimum_change = minimum_change
-        self.tail = tail
         self.secondary_metrics = secondary_metrics
         self.results = None
 
@@ -74,7 +64,6 @@ class Experiment:
             branches=%r,
             primary_metric=%r,
             minimum_change=%r,
-            tail=%r,
             secondary_metrics=%r,
             results=%r,
         )''' % (
@@ -87,7 +76,6 @@ class Experiment:
             self.branches,
             self.primary_metric,
             self.minimum_change,
-            self.tail,
             self.secondary_metrics,
             self.results,
         )).strip()

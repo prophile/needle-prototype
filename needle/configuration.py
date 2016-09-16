@@ -1,7 +1,7 @@
 import yaml
 import logging
 
-from .experiment import Experiment, Branch, UserClass, Tail
+from .experiment import Experiment, Branch, UserClass
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,6 @@ class Configuration:
                 branches=branches,
                 primary_metric=experiment['metric'],
                 minimum_change=experiment['minimum-change'],
-                tail=Tail(experiment.get('tail', 'both')),
                 secondary_metrics=(),
             ))
 
