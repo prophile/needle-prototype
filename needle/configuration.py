@@ -1,6 +1,8 @@
 import yaml
 import logging
 
+from .kpi import KPI
+from .metrics import METRIC_FAMILIES
 from .experiment import Experiment, Branch, UserClass
 
 logger = logging.getLogger(__name__)
@@ -17,8 +19,27 @@ class Configuration:
         logger.debug("Loading experiments")
         self._load_experiments()
 
-        logger.debug("Loading metrics")
-        self._tmp_metric_config = self._load_yaml('metrics.yaml')
+        logger.debug("Loading KPIs")
+        self._load_kpis()
+
+    def _load_kpis(self):
+        source = self._load_yaml('kpis.yaml')
+
+        self.kpis = {}
+
+        for name, kpi in source['kpis'].items():
+            metric = METRIC_FAMILIES[kpi['metric']](kpi['prior'])
+
+            self.kpis[name] = KPI(
+                name=kpi['name'],
+                description=kpi['description'],
+                metric=metric,
+                sql=kpi['sql'],
+            )
+
+        self.connection_string = source['connection']
+
+        self.get_users_sql = source['get-users']
 
     def _load_experiments(self):
         source = self._load_yaml('experiments.yaml')
@@ -62,9 +83,9 @@ class Configuration:
                 user_class=UserClass(experiment.get('user-class', 'both')),
                 start_date=experiment['start-date'],
                 branches=branches,
-                primary_metric=experiment['metric'],
+                primary_kpi=experiment['kpi'],
                 minimum_change=experiment['minimum-change'],
-                secondary_metrics=(),
+                secondary_kpis=(),
             ))
 
             self.site_areas.add(site_area)

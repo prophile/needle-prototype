@@ -11,5 +11,5 @@ experiments:
         parameters:
           button-colour: green
     site-area: home
-    metric: conversion
+    kpi: conversion
     minimum-change: 0.01

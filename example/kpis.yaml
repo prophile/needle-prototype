@@ -1,4 +1,4 @@
-metrics:
+kpis:
  conversion:
    name: Conversion to first order (14 day)
    description: >

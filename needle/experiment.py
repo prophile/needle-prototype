@@ -20,9 +20,9 @@ class Experiment:
         'user_class',
         'start_date',
         'branches',
-        'primary_metric',
+        'primary_kpi',
         'minimum_change',
-        'secondary_metrics',
+        'secondary_kpis',
         'results',
     )
 
@@ -36,9 +36,9 @@ class Experiment:
         user_class=UserClass.BOTH,
         start_date,
         branches,
-        primary_metric,
+        primary_kpi,
         minimum_change,
-        secondary_metrics=()
+        secondary_kpis=()
     ):
         self.name = name
         self.description = description
@@ -47,9 +47,9 @@ class Experiment:
         self.user_class = user_class
         self.start_date = start_date
         self.branches = branches
-        self.primary_metric = primary_metric
+        self.primary_kpi = primary_kpi
         self.minimum_change = minimum_change
-        self.secondary_metrics = secondary_metrics
+        self.secondary_kpis = secondary_kpis
         self.results = None
 
     def __repr__(self):
@@ -62,9 +62,9 @@ class Experiment:
             user_class=%r,
             start_date=%r,
             branches=%r,
-            primary_metric=%r,
+            primary_kpi=%r,
             minimum_change=%r,
-            secondary_metrics=%r,
+            secondary_kpis=%r,
             results=%r,
         )''' % (
             self.name,
@@ -74,9 +74,9 @@ class Experiment:
             self.user_class,
             self.start_date,
             self.branches,
-            self.primary_metric,
+            self.primary_kpi,
             self.minimum_change,
-            self.secondary_metrics,
+            self.secondary_kpis,
             self.results,
         )).strip()
 
