@@ -1,41 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Needle</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css">
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <h1>User Lookup</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <form id="lookup-user" method="GET" action="user" class="form-inline">
-            <div class="form-group">
-              <label for="user-id">User ID</label>
-              <input id="user-id" name="user-id" type="text" class="form-control" placeholder="339635"></input>
-            </div>
-            <div class="form-group">
-              <label for="user-signup-date">Signup date</label>
-              <input id="user-signup-date" name="user-signup-date" type="date" class="form-control"></input>
-            </div>
-            <button type="submit" class="btn btn-primary">Lookup</button>
-          </form>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h1>Experiments</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <p><a id="experiments-list" href="experiments">List of experiments</a></p>
-        </div>
-      </div>
+{% extends "base.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>User Lookup</h1>
     </div>
-  </body>
-</html>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <form id="lookup-user" method="GET" action="user" class="form-inline">
+        <div class="form-group">
+          <label for="user-id">User ID</label>
+          <input id="user-id" name="user-id" type="text" class="form-control" placeholder="339635"></input>
+        </div>
+        <div class="form-group">
+          <label for="user-signup-date">Signup date</label>
+          <input id="user-signup-date" name="user-signup-date" type="date" class="form-control"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Lookup</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Experiments</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p><a id="experiments-list" href="experiments">List of experiments</a></p>
+    </div>
+  </div>
+{% endblock %}
