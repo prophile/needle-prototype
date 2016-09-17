@@ -20,6 +20,8 @@ def run_all_reports(configuration):
 
         reports[experiment.name] = evaluate_report(experiment, configuration)
 
+    logger.info("Finished running reports")
+
     return reports
 
 
