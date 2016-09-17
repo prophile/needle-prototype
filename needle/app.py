@@ -1,4 +1,5 @@
 import json
+import jinja2
 import aiohttp.web
 import asyncio
 import logging
@@ -16,13 +17,27 @@ logger = logging.getLogger(__name__)
 current_results = {}
 
 
+@functools.lru_cache(maxsize=1)
+def get_template_environment():
+    return jinja2.Environment(
+        loader=jinja2.PackageLoader('needle', 'templates'),
+        auto_reload=False,
+    )
+
+
+@functools.lru_cache()
+def get_template(name):
+    env = get_template_environment()
+    return env.get_template(name)
+
+
 def get_configuration(request):
     from .configuration import Configuration  # Lazy-load
     return Configuration(request.app['root'])
 
 
-def send_static_file(path, mimetype='text/html', cache=True, headers={}):
-    file_data = pkg_resources.resource_string('needle', path)
+def send_template(template, context={}, mimetype='text/html', cache=True, headers={}):
+    tpl = get_template(template)
 
     if cache:
         headers = {
@@ -33,13 +48,13 @@ def send_static_file(path, mimetype='text/html', cache=True, headers={}):
     return aiohttp.web.Response(
         status=200,
         content_type=mimetype,
-        body=file_data,
+        text=tpl.render(context),
         headers=headers,
     )
 
 
 async def site_root(request):
-    return send_static_file('templates/index.html')
+    return send_template('index.html')
 
 
 async def experiments(request):
