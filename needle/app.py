@@ -36,13 +36,13 @@ def get_configuration(request):
     return Configuration(request.app['root'])
 
 
-def send_template(template, context={}, mimetype='text/html', cache=True, headers={}):
+def send_template(template, context={}, mimetype='text/html', cache=0, headers={}):
     tpl = get_template(template)
 
     if cache:
         headers = {
             **headers,
-            'Cache-Control': 'max-age: 600',
+            'Cache-Control': 'max-age: %d' % cache,
         }
 
     return aiohttp.web.Response(
@@ -54,7 +54,7 @@ def send_template(template, context={}, mimetype='text/html', cache=True, header
 
 
 async def site_root(request):
-    return send_template('index.html')
+    return send_template('index.html', cache=600)
 
 
 async def experiments(request):
