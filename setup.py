@@ -26,6 +26,7 @@ setup(
         'pyyaml >=3.12, <4',
         'python-dateutil >=2.5',
         'Jinja2 >=2.8',
+        'sqlalchemy >=1.05, <2',
     ),
     entry_points={
         'console_scripts': (
