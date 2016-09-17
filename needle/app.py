@@ -21,10 +21,14 @@ def get_configuration(request):
     return Configuration(request.app['root'])
 
 
-def send_static_file(path, mimetype='text/html'):
-    file_data = pkg_resources.resource_string('needle', 'static/index.html')
+def send_static_file(path, mimetype='text/html', cache=True, headers={}):
+    file_data = pkg_resources.resource_string('needle', path)
 
-    headers = {'Cache-Control': 'max-age: 600'}
+    if cache:
+        headers = {
+            **headers,
+            'Cache-Control': 'max-age: 600',
+        }
 
     return aiohttp.web.Response(
         status=200,
