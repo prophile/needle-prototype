@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 def evaluate_report(experiment, configuration):
     logger.debug("Connecting to DB")
-    db_connection = sqlalchemy.create_connection(
+    db_connection = sqlalchemy.create_engine(
         configuration.connection_string,
     )
 
