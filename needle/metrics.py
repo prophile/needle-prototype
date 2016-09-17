@@ -4,7 +4,7 @@ import scipy.stats
 import collections
 
 
-DistributionDescription = namedtuple('DistributionDescription', (
+DistributionDescription = collections.namedtuple('DistributionDescription', (
     'mean',
     'std',
     'skewness',
@@ -121,7 +121,7 @@ METRIC_FAMILIES = {
 }
 
 
-BranchEvaluation = namedtuple('BranchEvaluation', (
+BranchEvaluation = collections.namedtuple('BranchEvaluation', (
     'posterior',
     'sample_size',
     'p_positive',
