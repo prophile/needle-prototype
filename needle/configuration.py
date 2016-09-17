@@ -85,7 +85,10 @@ class Configuration:
                 branches=branches,
                 primary_kpi=experiment['kpi'],
                 minimum_change=experiment['minimum-change'],
-                secondary_kpis=(),
+                secondary_kpis=tuple(experiment.get(
+                    'secondary-kpis',
+                    (),
+                )),
             ))
 
             self.site_areas.add(site_area)
