@@ -25,6 +25,22 @@ def run_all_reports(configuration):
     return reports
 
 
+def get_recommendation(kpi_result):
+    non_control_branches = [
+        branch
+        for branch_name, branch in kpi_result['data'].items()
+        if branch_name != 'control'
+    ]
+
+    if (
+        all(x['p_negative'] < 0.05 for x in non_control_branches) or
+        any(x['p_positive'] > 0.95 for x in non_control_branches)
+    ):
+        return "conclude"
+
+    return "continue"
+
+
 def evaluate_report(experiment, configuration):
     logging.info("Reporting on %s", experiment.name)
     logger.debug("Connecting to DB")
@@ -77,11 +93,14 @@ def evaluate_report(experiment, configuration):
             },
         }
 
+    primary_kpi_result = run_kpi(experiment.primary_kpi)
+
     return {
         'experiment': experiment.name,
         'description': experiment.description,
         'start_date': str(experiment.start_date),
-        'primary': run_kpi(experiment.primary_kpi),
+        'primary': primary_kpi_result,
+        'recommendation': get_recommendation(primary_kpi_result),
         'secondaries': [
             run_kpi(x)
             for x in experiment.secondary_kpis
