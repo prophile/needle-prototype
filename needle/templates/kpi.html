@@ -1,0 +1,52 @@
+{% set id_base=uuid() %}
+
+<div class="row">
+  <div class="col-md-5">
+    <h3>{{ kpi.kpi }}</h3>
+    <p>{{ kpi.description }}</p>
+    <p class="small">Model: <strong>{{ kpi.model }}</strong></p>
+
+    {% for group, data in kpi.data|dictsort %}
+      <h4>{{ group|title }}</h4>
+      <p class="small">Samples: {{ data.sample_size }}</p>
+      {% if data.p_positive %}
+        <p class="small">P(positive): {{ data.p_positive|percent }}</p>
+      {% endif %}
+      {% if data.p_negative %}
+        <p class="small">P(negative): {{ data.p_negative|percent }}</p>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="col-md-7">
+    <div id="{{ id_base }}" style="height: 200px">
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function bees() {
+    var data = google.visualization.arrayToDataTable([
+    {% for group, data in kpi.data|dictsort %}
+      ['{{ group|title }}', {{ data.posterior.percentiles[5] }}, {{ data.posterior.percentiles[25] }}, {{ data.posterior.percentiles[75] }}, {{ data.posterior.percentiles[95] }}],
+    {% endfor %}
+    ], true);
+
+    var options = {
+      legend: 'none',
+      orientation: 'vertical',
+      {% if kpi.model == 'Bernoulli' %}
+      hAxis: {
+        format: 'percent'
+      }
+      {% endif %}
+    };
+
+    var chart = new google.visualization.CandlestickChart(
+      document.getElementById('{{ id_base }}')
+    );
+
+    chart.draw(data, options);
+  }
+
+  google.charts.setOnLoadCallback(bees);
+</script>

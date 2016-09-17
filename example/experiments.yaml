@@ -1,5 +1,7 @@
 experiments:
   - name: First Test
+    description: >
+      We are testing whether a green button converts better than a red one.
     start-date: 2016-09-07
     branches:
       - name: control

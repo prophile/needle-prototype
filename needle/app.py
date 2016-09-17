@@ -1,4 +1,5 @@
 import json
+import uuid
 import jinja2
 import aiohttp.web
 import asyncio
@@ -17,15 +18,25 @@ logger = logging.getLogger(__name__)
 current_results = {}
 
 
+def filter_percent(value):
+    return '%.1f%%' % (100 * value)
+
+
 @functools.lru_cache(maxsize=1)
 def get_template_environment():
-    return jinja2.Environment(
+    environment = jinja2.Environment(
         loader=jinja2.PackageLoader('needle', 'templates'),
-        auto_reload=False,
+        auto_reload=True,
+        extensions=(
+            'jinja2.ext.with_',
+        ),
     )
 
+    environment.filters['percent'] = filter_percent
+    environment.globals['uuid'] = lambda: str(uuid.uuid4())
 
-@functools.lru_cache()
+    return environment
+
 def get_template(name):
     env = get_template_environment()
     return env.get_template(name)
@@ -58,14 +69,10 @@ async def site_root(request):
 
 
 async def experiments(request):
-    return aiohttp.web.Response(
-        status=200,
-        headers={
-            'Cache-Control': 'max-age: 60',
-            'Link': '</>; rel=index',
-        },
-        content_type='application/json',
-        body=json.dumps(current_results, indent=2).encode('utf-8'),
+    return send_template(
+        'experiments.html',
+        {'experiments': current_results},
+        cache=120,
     )
 
 

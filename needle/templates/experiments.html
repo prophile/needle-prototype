@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Experiments</h1>
+    </div>
+  </div>
+  {% for experiment, results in experiments.items() %}
+  <div class="row">
+    <div class="col-md-12">
+      <h2>{{ experiment }}</h2>
+      <p>{{ results.description }}</p>
+      <div class="container-fluid">
+        {% with %}
+          {% set kpi = results.primary %}
+          {% include "kpi.html" %}
+        {% endwith %}
+
+        {% for kpi in results.secondaries %}
+          {% include "kpi.html" %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock body %}

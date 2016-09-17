@@ -77,6 +77,7 @@ def evaluate_report(experiment, configuration):
 
     return {
         'experiment': experiment.name,
+        'description': experiment.description,
         'start_date': str(experiment.start_date),
         'primary': run_kpi(experiment.primary_kpi),
         'secondaries': [
