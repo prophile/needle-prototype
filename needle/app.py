@@ -113,7 +113,7 @@ def bg_reports_task(loop, path):
     future.add_done_callback(done_a_thing)
 
 
-def run(root, *, host='::', port=2121, debug=False):
+def run(root, *, host='::', port=1212, debug=False):
     app = get_app(root, debug=debug)
 
     loop = asyncio.get_event_loop()
