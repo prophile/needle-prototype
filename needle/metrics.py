@@ -78,10 +78,10 @@ class BernoulliMetric(Metric):
     def analyse_samples(self, samples):
         counts = collections.Counter(samples.astype(bool))
 
-        return scipy.stats.beta(
+        return describe_scipy_distribution(scipy.stats.beta(
             self.prior_alpha + counts[True],
             self.prior_beta + counts[False],
-        )
+        ))
 
 
 class BootstrapMetric(Metric):
