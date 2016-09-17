@@ -14,7 +14,7 @@ def evaluate_report(experiment, configuration):
     )
 
     users_by_branch = {
-        x: set()
+        x.name: set()
         for x in experiment.branches
     }
 
@@ -28,7 +28,7 @@ def evaluate_report(experiment, configuration):
             configuration,
         ):
             if user_experiment == experiment:
-                users_by_branch[experiment_branch].add(user_id)
+                users_by_branch[experiment_branch.name].add(user_id)
 
     def run_kpi(kpi_name, minimum_effect_size=0):
         kpi = configuration.kpis[kpi_name]
