@@ -123,6 +123,7 @@ def run(root, *, host='::', port=2121, debug=False):
         host,
         port,
     )
+    loop.run_until_complete(server)
 
     loop.call_soon(bg_reports_task, loop, root)
 
