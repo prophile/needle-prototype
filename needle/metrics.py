@@ -18,11 +18,11 @@ def describe_scipy_distribution(distribution):
     ppf = distribution.ppf
 
     return DistributionDescription(
-        mean=mean,
+        mean=float(mean),
         std=numpy.sqrt(var),
-        skewness=skew,
+        skewness=float(skew),
         percentiles=tuple(
-            ppf(x / 100)
+            float(ppf(x / 100))
             for x in range(101)
         ),
     )
@@ -108,11 +108,11 @@ class BootstrapMetric(Metric):
         raise NotImplementedError("Must implement `statistic`")
 
 
-class MedianBootstrapMetric(Metric):
+class MedianBootstrapMetric(BootstrapMetric):
     name = "Median (bootstrap)"
 
     def statistic(self, data):
-        return numpy.median(data)
+        return numpy.median(data.astype(float))
 
 
 METRIC_FAMILIES = {
@@ -141,7 +141,7 @@ def calculate_prob_improvement(
     mean_diff_above = test.mean - (reference.mean + minimum_effect_size)
     mean_diff_below = test.mean - (reference.mean - minimum_effect_size)
 
-    std_diff = math.hypot(control.std, test.std)
+    std_diff = math.hypot(reference.std, test.std)
 
     prob_test_below = 1 - scipy.stats.norm.cdf(
         mean_diff_below / std_diff,
