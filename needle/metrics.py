@@ -45,7 +45,7 @@ def describe_empirical_distribution(data):
 
 
 class Metric(object):
-    name = NotImplemented()
+    name = NotImplemented
 
     def __init__(self, prior):
         pass
