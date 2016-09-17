@@ -77,7 +77,10 @@ async def lookup_user(request):
 
     return aiohttp.web.Response(
         status=200,
-        headers={'Cache-Control': 'max-age: 60'},
+        headers={
+            'Cache-Control': 'max-age: 60',
+            'Link': '</>; rel=index',
+        },
         content_type='application/json',
         body=json.dumps(response).encode('utf-8'),
     )
