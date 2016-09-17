@@ -38,6 +38,18 @@ async def site_root(request):
     return send_static_file('static/index.html')
 
 
+async def experiments(request):
+    return aiohttp.web.Response(
+        status=200,
+        headers={
+            'Cache-Control': 'max-age: 60',
+            'Link': '</>; rel=index',
+        },
+        content_type='application/json',
+        body=json.dumps(current_results, indent=2).encode('utf-8'),
+    )
+
+
 async def lookup_user(request):
     try:
         user_id = int(request.GET['user-id'])
@@ -93,6 +105,7 @@ def get_app(root, *, debug=False):
     )
     app.router.add_route('GET', '/', site_root)
     app.router.add_route('GET', '/user', lookup_user)
+    app.router.add_route('GET', '/experiments', experiments)
     app['root'] = root
     return app
 
