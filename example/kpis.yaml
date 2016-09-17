@@ -4,8 +4,10 @@ kpis:
    description: >
      Fraction of users converting from finishing registration to making an
      order within 14 days
-   type: bernoulli
-   prior: [1.0, 20.0]
+   metric: bernoulli
+   prior:
+     alpha: 1.0
+     beta: 20.0
    sql: >
      SELECT
        EXISTS (
