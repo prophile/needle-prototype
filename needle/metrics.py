@@ -180,6 +180,7 @@ def evaluate_metric(
 
     results = {
         branch_id: describe_branch(branch_users)
+        for branch_id, branch_users in branches.items()
     }
 
     # Stage 2: improvement annotations
