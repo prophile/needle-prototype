@@ -35,7 +35,7 @@ def send_static_file(path, mimetype='text/html'):
 
 
 async def site_root(request):
-    return send_static_file('static/index.html')
+    return send_static_file('templates/index.html')
 
 
 async def experiments(request):
