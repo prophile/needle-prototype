@@ -2,6 +2,7 @@ import sys
 import logging
 import pathlib
 import argparse
+import contextlib
 
 from .app import run
 
@@ -58,9 +59,10 @@ def main(args=sys.argv[1:]):
         level=logging.DEBUG if verbose_output else logging.INFO,
     )
 
-    run(
-        root=options.dir,
-        host=options.bind,
-        port=options.port,
-        debug=options.debug,
-    )
+    with contextlib.suppress(KeyboardInterrupt):
+        run(
+            root=options.dir,
+            host=options.bind,
+            port=options.port,
+            debug=options.debug,
+        )
