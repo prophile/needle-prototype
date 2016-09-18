@@ -176,7 +176,7 @@ def evaluate_metric(
     control_branch='control',
 ):
     # Branches are a dict of branch names to user ID tuples.
-    # 2 stage: first calculate all branches, the annotate with p_positive and
+    # 2 stage: first calculate all branches, then annotate with p_positive and
     # p_negative.
 
     # Stage 1: Metric evaluation
