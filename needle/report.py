@@ -53,7 +53,8 @@ def evaluate_report(experiment, configuration):
         for x in experiment.branches
     }
 
-    run_query = db_connection.execute
+    def run_query(x, *args, **kwargs):
+        return list(db_connection.execute(x, *args, **kwargs))
 
     logger.debug("Enumerating users")
     for user_id, signup_date in run_query(configuration.get_users_sql):
