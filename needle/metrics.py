@@ -118,9 +118,17 @@ class MedianBootstrapMetric(BootstrapMetric):
         return numpy.median(data.astype(float))
 
 
+class MeanBootstrapMetric(BootstrapMetric):
+    name = "Mean (bootstrap)"
+
+    def statistic(self, data):
+        return numpy.mean(data.astype(float))
+
+
 METRIC_FAMILIES = {
     'bernoulli': BernoulliMetric,
     'median_bootstrap': MedianBootstrapMetric,
+    'mean_bootstrap': MeanBootstrapMetric,
 }
 
 
