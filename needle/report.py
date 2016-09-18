@@ -65,6 +65,9 @@ def evaluate_report(experiment, configuration):
             if user_experiment == experiment:
                 users_by_branch[experiment_branch.name].add(user_id)
 
+    for branch in experiment.branches:
+        logger.debug("%s: %d", branch.name, len(users_by_branch[branch.name]))
+
     def run_kpi(kpi_name, minimum_effect_size=0):
         kpi = configuration.kpis[kpi_name]
 
