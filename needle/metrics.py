@@ -56,6 +56,9 @@ class Metric(object):
         return self.analyse_samples(samples), len(samples)
 
     def get_samples(self, user_ids, sql, run_query):
+        if len(user_ids) == 0:
+            return numpy.array([])
+
         return numpy.array([
             x
             for (x,) in run_query(
