@@ -37,10 +37,7 @@ def describe_empirical_distribution(data):
         mean=mean,
         std=std,
         skewness=skew,
-        percentiles=tuple(
-            numpy.percentile(data, x)
-            for x in range(101)
-        ),
+        percentiles=tuple(numpy.percentile(data, range(101))),
     )
 
 
