@@ -47,51 +47,54 @@ class Configuration:
         self.experiments = []
 
         for experiment in source['experiments']:
-            experiment_name = experiment['name']
-            logger.info("Loading experiment %r", experiment_name)
+            self._load_experiment(experiment)
 
-            branches = []
+    def _load_experiment(self, experiment):
+        experiment_name = experiment['name']
+        logger.info("Loading experiment %r", experiment_name)
 
-            for branch in experiment['branches']:
-                branches.append(Branch(
-                    name=branch['name'],
-                    fraction=branch['fraction'],
-                    parameters=branch['parameters'],
-                ))
+        branches = []
 
-            if not any(x.name == 'control' for x in branches):
-                logger.error(
-                    "Experiment %s defines no control branch",
-                    experiment_name,
-                )
-                raise ValueError("No branch in %s" % experiment_name)
-
-            if sum(x.fraction for x in branches) > 1:
-                logger.error(
-                    "Experiment %s defines superunity coverage",
-                    experiment_name,
-                )
-                raise ValueError("Superunity coverage in %s" % experiment_name)
-
-            site_area = experiment['site-area']
-
-            self.experiments.append(Experiment(
-                name=experiment_name,
-                description=experiment.get('description', ""),
-                confidence=experiment.get('confidence', 0.95),
-                site_area=site_area,
-                user_class=UserClass(experiment.get('user-class', 'both')),
-                start_date=experiment['start-date'],
-                branches=branches,
-                primary_kpi=experiment['kpi'],
-                minimum_change=experiment['minimum-change'],
-                secondary_kpis=tuple(experiment.get(
-                    'secondary-kpis',
-                    (),
-                )),
+        for branch in experiment['branches']:
+            branches.append(Branch(
+                name=branch['name'],
+                fraction=branch['fraction'],
+                parameters=branch['parameters'],
             ))
 
-            self.site_areas.add(site_area)
+        if not any(x.name == 'control' for x in branches):
+            logger.error(
+                "Experiment %s defines no control branch",
+                experiment_name,
+            )
+            raise ValueError("No branch in %s" % experiment_name)
+
+        if sum(x.fraction for x in branches) > 1:
+            logger.error(
+                "Experiment %s defines superunity coverage",
+                experiment_name,
+            )
+            raise ValueError("Superunity coverage in %s" % experiment_name)
+
+        site_area = experiment['site-area']
+
+        self.experiments.append(Experiment(
+            name=experiment_name,
+            description=experiment.get('description', ""),
+            confidence=experiment.get('confidence', 0.95),
+            site_area=site_area,
+            user_class=UserClass(experiment.get('user-class', 'both')),
+            start_date=experiment['start-date'],
+            branches=branches,
+            primary_kpi=experiment['kpi'],
+            minimum_change=experiment['minimum-change'],
+            secondary_kpis=tuple(experiment.get(
+                'secondary-kpis',
+                (),
+            )),
+        ))
+
+        self.site_areas.add(site_area)
 
     def _load_yaml(self, filename):
         path = self.path / filename
