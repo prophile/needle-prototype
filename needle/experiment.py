@@ -170,22 +170,20 @@ def user_experiments(user_id, signup_date, configuration):
         )
 
         hash_base = ('%s/%s' % (
-            site_area,
             user_id,
+            site_area,
         )).encode('utf-8')
 
         user_hash = int.from_bytes(
-            hashlib.md5(hash_base).digest(),
+            hashlib.sha256(hash_base).digest(),
             byteorder='big',
         )
-        precision = 1000000
+        precision = 2 ** 256
 
-        user_hash %= precision
+        user_hash /= precision
 
         for fraction, experiment, branch in user_split:
-            threshold = int(fraction * precision)
-
-            if user_hash <= threshold:
+            if user_hash <= fraction:
                 # User is in this group, verify validity
 
                 if user_valid_for_experiment(signup_date, experiment):
