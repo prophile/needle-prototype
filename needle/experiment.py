@@ -1,8 +1,8 @@
 import enum
-import decimal
 import hashlib
 import datetime
 import textwrap
+
 
 @enum.unique
 class UserClass(enum.Enum):
@@ -99,7 +99,10 @@ class Experiment:
 
     @property
     def is_in_progress(self):
-        return self.start_date <= datetime.date.today() and not self.is_concluded
+        return (
+            self.start_date <= datetime.date.today() and
+            not self.is_concluded
+        )
 
 
 class Branch:

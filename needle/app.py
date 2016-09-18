@@ -7,7 +7,6 @@ import logging
 import dateutil.parser
 import functools
 import concurrent.futures
-import pkg_resources
 
 from .experiment import user_experiments
 
@@ -37,6 +36,7 @@ def get_template_environment():
 
     return environment
 
+
 def get_template(name):
     env = get_template_environment()
     return env.get_template(name)
@@ -47,7 +47,13 @@ def get_configuration(request):
     return Configuration(request.app['root'])
 
 
-def send_template(template, context={}, mimetype='text/html', cache=0, headers={}):
+def send_template(
+    template,
+    context={},
+    mimetype='text/html',
+    cache=0,
+    headers={},
+):
     tpl = get_template(template)
 
     if cache:
