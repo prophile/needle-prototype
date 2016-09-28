@@ -15,7 +15,7 @@ def argument_parser():
         type=pathlib.Path,
         default=pathlib.Path.cwd(),
         nargs='?',
-        help="main directory, defining tests and metrics",
+        help="main directory, defining tests and KPIs",
     )
 
     parser.add_argument(

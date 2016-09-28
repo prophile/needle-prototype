@@ -41,7 +41,7 @@ def describe_empirical_distribution(data):
     )
 
 
-class Metric(object):
+class Model(object):
     name = NotImplemented
 
     def __init__(self, prior):
@@ -68,7 +68,7 @@ class Metric(object):
         raise NotImplementedError("Must implement `analyse_samples`")
 
 
-class BernoulliMetric(Metric):
+class BernoulliModel(Model):
     name = "Bernoulli"
 
     def __init__(self, prior):
@@ -84,7 +84,7 @@ class BernoulliMetric(Metric):
         ))
 
 
-class BootstrapMetric(Metric):
+class BootstrapModel(Model):
     NBOOTSTRAPS = 10000
 
     def __init__(self, prior):
@@ -108,24 +108,24 @@ class BootstrapMetric(Metric):
         raise NotImplementedError("Must implement `statistic`")
 
 
-class MedianBootstrapMetric(BootstrapMetric):
+class MedianBootstrapModel(BootstrapModel):
     name = "Median (bootstrap)"
 
     def statistic(self, data):
         return numpy.median(data.astype(float))
 
 
-class MeanBootstrapMetric(BootstrapMetric):
+class MeanBootstrapModel(BootstrapModel):
     name = "Mean (bootstrap)"
 
     def statistic(self, data):
         return numpy.mean(data.astype(float))
 
 
-METRIC_FAMILIES = {
-    'bernoulli': BernoulliMetric,
-    'median_bootstrap': MedianBootstrapMetric,
-    'mean_bootstrap': MeanBootstrapMetric,
+MODEL_FAMILIES = {
+    'bernoulli': BernoulliModel,
+    'median_bootstrap': MedianBootstrapModel,
+    'mean_bootstrap': MeanBootstrapModel,
 }
 
 
@@ -164,9 +164,9 @@ def calculate_prob_improvement(
         return prob_test_above, prob_test_below
 
 
-def evaluate_metric(
+def evaluate_model(
     branches,
-    metric,
+    model,
     sql,
     run_query,
     minimum_effect_size=0,  # Positive for > tail, negative for < tail
@@ -176,9 +176,9 @@ def evaluate_metric(
     # 2 stage: first calculate all branches, then annotate with p_positive and
     # p_negative.
 
-    # Stage 1: Metric evaluation
+    # Stage 1: Model evaluation
     def describe_branch(users):
-        posterior, samples = metric.evaluate(tuple(users), sql, run_query)
+        posterior, samples = model.evaluate(tuple(users), sql, run_query)
         return BranchEvaluation(
             posterior=posterior,
             sample_size=samples,

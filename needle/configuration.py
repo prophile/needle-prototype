@@ -2,7 +2,7 @@ import yaml
 import logging
 
 from .kpi import KPI
-from .metrics import METRIC_FAMILIES
+from .models import MODEL_FAMILIES
 from .experiment import Experiment, Branch, UserClass
 
 logger = logging.getLogger(__name__)
@@ -28,12 +28,12 @@ class Configuration:
         self.kpis = {}
 
         for name, kpi in source['kpis'].items():
-            metric = METRIC_FAMILIES[kpi['metric']](kpi['prior'])
+            model = MODEL_FAMILIES[kpi['model']](kpi['prior'])
 
             self.kpis[name] = KPI(
                 name=kpi['name'],
                 description=kpi['description'],
-                metric=metric,
+                model=model,
                 sql=kpi['sql'],
             )
 

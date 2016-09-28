@@ -2,7 +2,7 @@ import logging
 import datetime
 import sqlalchemy
 
-from .metrics import evaluate_metric
+from .models import evaluate_model
 from .experiment import user_experiments
 
 logger = logging.getLogger(__name__)
@@ -74,9 +74,9 @@ def evaluate_report(experiment, configuration):
 
         logger.debug("Running KPI %s", kpi.name)
 
-        metric_data = evaluate_metric(
+        model_data = evaluate_model(
             users_by_branch,
-            kpi.metric,
+            kpi.model,
             kpi.sql,
             run_query,
             minimum_effect_size=minimum_effect_size,
@@ -85,15 +85,15 @@ def evaluate_report(experiment, configuration):
         return {
             'kpi': kpi.name,
             'description': kpi.description,
-            'model': kpi.metric.name,
+            'model': kpi.model.name,
             'data': {
                 branch: {
-                    'p_positive': metrics.p_positive,
-                    'p_negative': metrics.p_negative,
-                    'sample_size': metrics.sample_size,
-                    'posterior': metrics.posterior._asdict(),
+                    'p_positive': models.p_positive,
+                    'p_negative': models.p_negative,
+                    'sample_size': models.sample_size,
+                    'posterior': models.posterior._asdict(),
                 }
-                for branch, metrics in metric_data.items()
+                for branch, models in model_data.items()
             },
         }
 
